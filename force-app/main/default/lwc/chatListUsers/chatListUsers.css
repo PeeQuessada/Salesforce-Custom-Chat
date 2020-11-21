@@ -1,10 +1,6 @@
-input {
-  border-radius: 12px;
-}
-
-.c-conversation-height {
-  height: 20rem;
-  max-height: 20rem;
+.c-list-users-height {
+  height: 21rem;
+  max-height: 21rem;
 }
 
 /* Let's get this party started */
