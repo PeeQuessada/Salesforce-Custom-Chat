@@ -1,13 +1,12 @@
 <template>
-  <div class="slds-grid slds-grid_vertical">
-    <div class="slds-col">
+  <div class="slds-m-top_xx-small slds-m-left_xx-small">
+    <div>
       <c-chat-search-user></c-chat-search-user>
     </div>
-    <div class="slds-col">
-      <h1><b>List Users</b></h1>
+    <div>
       <template for:each={fakeList} for:item="user">
-        <div key={user.name}>
-          <div class="avatar">
+        <div class="slds-grid slds-gutters slds-m-top_x-small" key={user.name}>
+          <div class="slds-col slds-size_2-of-6">
             <span
               aria-hidden="true"
               class="slds-avatar slds-avatar_circle slds-chat-avatar"
@@ -15,11 +14,12 @@
               <abbr
                 class="slds-avatar__initials slds-avatar__initials_inverse"
                 title={user.name}
-                >{user.inicial}</abbr
               >
+                {user.inicial}
+              </abbr>
             </span>
           </div>
-          <div class="user-name">
+          <div class="slds-col slds-size_4-of-6 slds-m-top_xx-small">
             <p>{user.name}</p>
           </div>
         </div>

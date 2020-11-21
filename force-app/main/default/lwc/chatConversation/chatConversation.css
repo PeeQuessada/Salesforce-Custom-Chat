@@ -1,0 +1,8 @@
+input {
+  border-radius: 12px;
+}
+
+.c-conversation-height {
+  height: 20rem;
+  max-height: 20rem;
+}
