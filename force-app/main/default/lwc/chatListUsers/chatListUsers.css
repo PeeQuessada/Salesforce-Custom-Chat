@@ -3,6 +3,11 @@
   max-height: 21rem;
 }
 
+.teste:hover {
+  background-color: rgb(180, 180, 180);
+  cursor: pointer;
+}
+
 /* Let's get this party started */
 ::-webkit-scrollbar {
   width: 6px;
