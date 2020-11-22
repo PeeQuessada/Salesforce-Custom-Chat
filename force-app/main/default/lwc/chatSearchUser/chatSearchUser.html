@@ -14,8 +14,11 @@
       <input
         type="text"
         id="text-input-id-1"
-        placeholder="Pesquisar"
+        placeholder="Buscar"
         class="slds-input"
+        data-id="searchUser"
+        value={value}
+        onkeyup={searchUser}
       />
       <button
         class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"

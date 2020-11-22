@@ -7,6 +7,10 @@ input {
   max-height: 20rem;
 }
 
+.c-chat-height {
+  min-height: 100%;
+}
+
 /* Let's get this party started */
 ::-webkit-scrollbar {
   width: 6px;

@@ -1,14 +1,16 @@
 <template>
   <div class="slds-m-top_xx-small slds-m-left_xx-small">
     <div>
-      <c-chat-search-user></c-chat-search-user>
+      <c-chat-search-user onsearchuser={searchUser}></c-chat-search-user>
     </div>
     <div class="slds-m-top_small slds-scrollable_y c-list-users-height">
-      <template for:each={fakeList} for:item="user">
+      <template for:each={users} for:item="user">
         <div
-          class="slds-grid slds-gutters slds-m-top_x-small teste"
-          key={user.name}
+          class="slds-grid slds-gutters slds-m-top_x-small c-user-houver"
           tabindex="0"
+          key={user.Id}
+          data-user={user.Id}
+          onclick={selectedUser}
         >
           <div class="slds-col slds-size_2-of-6">
             <span
@@ -17,14 +19,14 @@
             >
               <abbr
                 class="slds-avatar__initials slds-avatar__initials_inverse"
-                title={user.name}
+                title={user.Name}
               >
-                {user.inicial}
+                {user.Alias}
               </abbr>
             </span>
           </div>
           <div class="slds-col slds-size_4-of-6 slds-m-top_xx-small">
-            <p>{user.name}</p>
+            <p>{user.Name}</p>
           </div>
         </div>
       </template>
