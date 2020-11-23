@@ -5,17 +5,13 @@ public without sharing class chatController {
     Map<String, Object> result;
     try {
       String key = '%' + name + '%';
-      List<Chat__c> listChats = getChats(key);
       List<User> listUsers = [
         SELECT Id, Name, FirstName, Alias
         FROM User
         WHERE Name LIKE :key AND Id != :UserInfo.getUserId()
       ];
 
-      result = new Map<String, Object>{
-        'chats' => listChats,
-        'users' => listUsers
-      };
+      result = new Map<String, Object>{ 'users' => listUsers };
 
       return result;
       //return listUsers;
@@ -24,15 +20,11 @@ public without sharing class chatController {
     }
   }
 
-  @AuraEnabled(Cacheable=true)
-  public static Map<String, Object> getConversation(Id chatId) {
+  @AuraEnabled
+  public static Map<String, Object> getConversation(String chatId) {
     Map<String, Object> result;
     try {
-      if (chatId.getSobjectType().getDescribe().getName() == 'User') {
-        chatId = getChatId(chatId);
-      }
-
-      if (chatId == null) {
+      if (chatId == null || chatId == '') {
         return new Map<String, Object>();
       }
 
@@ -46,6 +38,7 @@ public without sharing class chatController {
             FORMAT(CreatedDate)
           FROM Message__c
           WHERE Chat__c = :chatId
+          ORDER BY CreatedDate ASC
         ],
         'chat' => [SELECT Id, Name FROM Chat__c WHERE Id = :chatId],
         'userChat' => [
@@ -72,14 +65,14 @@ public without sharing class chatController {
       if (userName != null && userName != '') {
         query =
           'SELECT Id, Name, ' +
-          '(SELECT Id, User__c FROM Chats__r WHERE User__c != :userId) Chats, ' +
+          '(SELECT Id, User__c, User__r.Name FROM Chats__r WHERE User__c != :userId) Chats, ' +
           '(SELECT Id, Message__c FROM Messages__r ORDER BY CreatedDate LIMIT 1) Messages ' +
           'FROM Chat__c WHERE Id IN ' +
-          '(SELECT Chat__c FROM ChatUser__c WHERE Name LIKE :userName)';
+          '(SELECT Chat__c FROM ChatUser__c WHERE User__r.Name LIKE :userName)';
       } else {
         query =
           'SELECT Id, Name, ' +
-          '(SELECT Id, User__c FROM Chats__r WHERE User__c != :userId) Chats, ' +
+          '(SELECT Id, User__c, User__r.Name FROM Chats__r WHERE User__c != :userId) Chats, ' +
           '(SELECT Id, Message__c FROM Messages__r ORDER BY CreatedDate LIMIT 1) Messages ' +
           'FROM Chat__c WHERE Id IN ' +
           '(SELECT Chat__c FROM ChatUser__c WHERE User__c = :userId)';
@@ -97,10 +90,11 @@ public without sharing class chatController {
     String chatId,
     String message
   ) {
+    System.debug('entrou');
     try {
       String fromUserId = UserInfo.getUserId();
-      // Nao existe o chat (Usuarios nunca conversaram)
-      if (chatId == null) {
+
+      if (chatId == null || chatId == '') {
         chatId = createChat(toUserId, fromUserId);
       }
 
