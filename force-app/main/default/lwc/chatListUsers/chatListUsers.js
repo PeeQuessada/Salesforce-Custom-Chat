@@ -1,20 +1,36 @@
 import { LightningElement, track, wire } from "lwc";
+import getConversation from "@salesforce/apex/chatController.getChats";
 import { publish, MessageContext } from "lightning/messageService";
 import SEND_USER from "@salesforce/messageChannel/sendUser__c";
 export default class ChatListUsers extends LightningElement {
   @wire(MessageContext) messageContext;
-  @track users = [];
+  @track chats = [];
+
+  connectedCallback() {
+    this.getChats();
+  }
+
+  getChats() {
+    getConversation()
+      .then((result) => {
+        this.chats = result;
+      })
+      .catch((error) => {
+        console.log("error init ", error);
+      });
+  }
 
   searchUser(event) {
     let error = event.detail.error;
-    this.users = error ? [] : this.formatAlias(event.detail.users);
+    this.chats = error ? [] : this.formatAlias(event.detail.users);
   }
 
-  selectedUser(event) {
+  selected(event) {
     console.log("click");
-    let userId = event.currentTarget.dataset.user;
-    this.sendUser(userId);
+    let chatId = event.currentTarget.dataset.chat;
+    this.sendId(chatId);
     this.template.querySelector("c-chat-search-user").cleanValue();
+    this.getChats();
     console.log("end ");
   }
 
@@ -31,15 +47,9 @@ export default class ChatListUsers extends LightningElement {
     return users;
   }
 
-  sendUser(userId) {
-    let user;
-    this.users.forEach((element) => {
-      if (element.Id === userId) {
-        user = element;
-      }
-    });
+  sendId(chatId) {
     // this.dispatchEvent(new CustomEvent('selected', { detail: userId}));
-    const record = { recordData: user };
+    const record = { recordData: chatId };
     publish(this.messageContext, SEND_USER, record);
     console.log("sended ");
   }

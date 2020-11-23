@@ -4,13 +4,13 @@
       <c-chat-search-user onsearchuser={searchUser}></c-chat-search-user>
     </div>
     <div class="slds-m-top_small slds-scrollable_y c-list-users-height">
-      <template for:each={users} for:item="user">
+      <template for:each={chats} for:item="chat">
         <div
           class="slds-grid slds-gutters slds-m-top_x-small c-user-houver"
           tabindex="0"
-          key={user.Id}
-          data-user={user.Id}
-          onclick={selectedUser}
+          key={chat.Id}
+          data-chat={chat.Id}
+          onclick={selected}
         >
           <div class="slds-col slds-size_2-of-6">
             <span
@@ -19,14 +19,14 @@
             >
               <abbr
                 class="slds-avatar__initials slds-avatar__initials_inverse"
-                title={user.Name}
+                title={chat.Name}
               >
-                {user.Alias}
+                {chat.Alias}
               </abbr>
             </span>
           </div>
           <div class="slds-col slds-size_4-of-6 slds-m-top_xx-small">
-            <p>{user.Name}</p>
+            <p>{chat.Name}</p>
           </div>
         </div>
       </template>

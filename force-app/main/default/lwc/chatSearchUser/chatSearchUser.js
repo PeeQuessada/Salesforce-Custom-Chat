@@ -15,7 +15,8 @@ export default class ChatSearchUser extends LightningElement {
     if (value) {
       getUsers({ name: value })
         .then((result) => {
-          this.sendEvent(result, null);
+          console.log("result ", result);
+          this.sendEvent(result.users, null);
         })
         .catch((error) => {
           this.sendEvent([], error);

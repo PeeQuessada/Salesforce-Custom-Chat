@@ -1,222 +1,123 @@
 <template>
   <div class="slds-box slds-m-right_x-small c-chat-height">
-    <template if:true={user}>
-      <div class="slds-scrollable_y c-conversation-height">
-        <h1 class="slds-m-bottom_x-small">{user.Name}</h1>
-        <section role="log" class="slds-chat">
-          <ul class="slds-chat-list">
-            <li class="slds-chat-listitem slds-chat-listitem_inbound">
-              <div class="slds-chat-message">
-                <span
-                  aria-hidden="true"
-                  class="slds-avatar slds-avatar_circle slds-chat-avatar"
-                >
-                  <abbr
-                    class="slds-avatar__initials slds-avatar__initials_inverse"
-                    title="Taylor Watson-Rice"
-                  >
-                    JA
-                  </abbr>
-                </span>
-                <div class="slds-chat-message__body">
-                  <div
-                    class="slds-chat-message__text slds-chat-message__text_inbound"
-                  >
-                    <span>
-                      Hello!!!, How do you do? My CloudWidget only speaks French
-                    </span>
+    <div class="slds-scrollable_y c-conversation-height">
+      <template if:true={chat}>
+        <h1 class="slds-m-bottom_x-small">{chat.Name}</h1>
+      </template>
+      <section role="log" class="slds-chat">
+        <ul class="slds-chat-list">
+          <template if:true={messages}>
+            <template for:each={messages} for:item="message">
+              <div key={message.Id}>
+                <template if:true={message.Owner}>
+                  <div class="slds-clearfix">
+                    <div class="slds-float_right">
+                      <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                        <div class="slds-clearfix">
+                          <div class="slds-float_right">
+                            <div class="slds-chat-message">
+                              <div class="slds-chat-message__body">
+                                <div
+                                  class="slds-chat-message__text slds-chat-message__text_inbound c-owner-message"
+                                >
+                                  <span>{message.Message__c}</span>
+                                </div>
+                                <div
+                                  class="slds-chat-message__meta"
+                                  aria-label="said Taylor Watson-Rice at 4:59 PM"
+                                >
+                                  {message.CreatedBy.Name}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </div>
                   </div>
-                </div>
+                </template>
+                <template if:false={message.Owner}>
+                  <div class="slds-clearfix">
+                    <div class="slds-float_left">
+                      <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                        <div class="slds-clearfix">
+                          <div class="slds-float_right">
+                            <div class="slds-chat-message">
+                              <div class="slds-chat-message__body">
+                                <div
+                                  class="slds-chat-message__text slds-chat-message__text_inbound"
+                                >
+                                  <span>{message.Message__c}</span>
+                                </div>
+                                <div
+                                  class="slds-chat-message__meta"
+                                  aria-label="said Taylor Watson-Rice at 4:59 PM"
+                                >
+                                  {message.CreatedBy.Name}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </div>
+                  </div>
+                </template>
               </div>
-            </li>
-            <li class="slds-chat-listitem slds-chat-listitem_inbound">
-              <div class="slds-chat-message">
-                <span
-                  aria-hidden="true"
-                  class="slds-avatar slds-avatar_circle slds-chat-avatar"
-                >
-                  <abbr
-                    class="slds-avatar__initials slds-avatar__initials_inverse"
-                    title="Taylor Watson-Rice"
-                  >
-                    JA
-                  </abbr>
-                </span>
-                <div class="slds-chat-message__body">
-                  <div
-                    class="slds-chat-message__text slds-chat-message__text_inbound"
-                  >
-                    <span>
-                      Hello!!!, How do you do? My CloudWidget only speaks French
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="slds-chat-listitem slds-chat-listitem_inbound">
-              <div class="slds-chat-message">
-                <span
-                  aria-hidden="true"
-                  class="slds-avatar slds-avatar_circle slds-chat-avatar"
-                >
-                  <abbr
-                    class="slds-avatar__initials slds-avatar__initials_inverse"
-                    title="Taylor Watson-Rice"
-                  >
-                    JA
-                  </abbr>
-                </span>
-                <div class="slds-chat-message__body">
-                  <div
-                    class="slds-chat-message__text slds-chat-message__text_inbound"
-                  >
-                    <span>
-                      Hello!!!, How do you do? My CloudWidget only speaks French
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="slds-chat-listitem slds-chat-listitem_inbound">
-              <div class="slds-chat-message">
-                <span
-                  aria-hidden="true"
-                  class="slds-avatar slds-avatar_circle slds-chat-avatar"
-                >
-                  <abbr
-                    class="slds-avatar__initials slds-avatar__initials_inverse"
-                    title="Taylor Watson-Rice"
-                  >
-                    JA
-                  </abbr>
-                </span>
-                <div class="slds-chat-message__body">
-                  <div
-                    class="slds-chat-message__text slds-chat-message__text_inbound"
-                  >
-                    <span>
-                      Hello!!!, How do you do? My CloudWidget only speaks French
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="slds-chat-listitem slds-chat-listitem_inbound">
-              <div class="slds-chat-message">
-                <span
-                  aria-hidden="true"
-                  class="slds-avatar slds-avatar_circle slds-chat-avatar"
-                >
-                  <abbr
-                    class="slds-avatar__initials slds-avatar__initials_inverse"
-                    title="Taylor Watson-Rice"
-                  >
-                    JA
-                  </abbr>
-                </span>
-                <div class="slds-chat-message__body">
-                  <div
-                    class="slds-chat-message__text slds-chat-message__text_inbound"
-                  >
-                    <span>
-                      Hello!!!, How do you do? My CloudWidget only speaks French
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="slds-chat-listitem slds-chat-listitem_inbound">
-              <div class="slds-chat-message">
-                <span
-                  aria-hidden="true"
-                  class="slds-avatar slds-avatar_circle slds-chat-avatar"
-                >
-                  <abbr
-                    class="slds-avatar__initials slds-avatar__initials_inverse"
-                    title="Taylor Watson-Rice"
-                  >
-                    JA
-                  </abbr>
-                </span>
-                <div class="slds-chat-message__body">
-                  <div
-                    class="slds-chat-message__text slds-chat-message__text_inbound"
-                  >
-                    <span>
-                      Hello!!!, How do you do? My CloudWidget only speaks French
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="slds-chat-listitem slds-chat-listitem_inbound">
-              <div class="slds-chat-message slds-chat-message_faux-avatar">
-                <div class="slds-chat-message__body">
-                  <div
-                    class="slds-chat-message__text slds-chat-message__text_inbound"
-                  >
-                    <span>I&#x27;m having trouble changing that.</span>
-                  </div>
-                  <div
-                    class="slds-chat-message__meta"
-                    aria-label="said Taylor Watson-Rice at 4:59 PM"
-                  >
-                    Taylor Watson-Rice • 4:59 PM
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </section>
-      </div>
-      <div class="slds-m-top_x-small">
-        <div class="slds-grid slds-gutters">
-          <div class="slds-col slds-size_10-of-12">
-            <div class="slds-form-element">
-              <div
-                class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left-right"
+            </template>
+          </template>
+        </ul>
+      </section>
+    </div>
+    <div class="slds-m-top_x-small">
+      <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_10-of-12">
+          <div class="slds-form-element">
+            <div
+              class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left-right"
+            >
+              <svg
+                class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default"
+                aria-hidden="true"
+              >
+                <use
+                  xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"
+                ></use>
+              </svg>
+              <input
+                type="text"
+                id="text-input-id-1"
+                placeholder="Escreve uma mensagem"
+                class="slds-input"
+                data-text="message"
+              />
+              <button
+                class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
+                title="Clear"
               >
                 <svg
-                  class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default"
+                  class="slds-button__icon slds-icon-text-light"
                   aria-hidden="true"
                 >
                   <use
-                    xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#search"
+                    xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#clear"
                   ></use>
                 </svg>
-                <input
-                  type="text"
-                  id="text-input-id-1"
-                  placeholder="Escreve uma mensagem"
-                  class="slds-input"
-                />
-                <button
-                  class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
-                  title="Clear"
-                >
-                  <svg
-                    class="slds-button__icon slds-icon-text-light"
-                    aria-hidden="true"
-                  >
-                    <use
-                      xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#clear"
-                    ></use>
-                  </svg>
-                  <span class="slds-assistive-text">Clear</span>
-                </button>
-              </div>
+                <span class="slds-assistive-text">Clear</span>
+              </button>
             </div>
           </div>
-          <div class="slds-col slds-size_2-of-12">
-            <lightning-button-icon
-              icon-name="utility:send"
-              variant="border-filled"
-              alternative-text="Send"
-              title="send"
-            ></lightning-button-icon>
-          </div>
+        </div>
+        <div class="slds-col slds-size_2-of-12">
+          <lightning-button-icon
+            icon-name="utility:send"
+            variant="border-filled"
+            alternative-text="Send"
+            title="send"
+            onclick={sendMessage}
+          ></lightning-button-icon>
         </div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
