@@ -15,15 +15,17 @@ export default class ChatContainer extends LightningElement {
     // Callback invoked whenever a new event message is received
     const messageCallback = (response) => {
       let message = response.data.payload;
-      if (message.CreatedById !== this.userId) {
-        try {
-          this.template.querySelector("c-chat-list-users").getChats();
-          this.template
-            .querySelector("c-chat-conversation")
-            .insertNewMessage(message);
-        } catch (error) {
-          console.log("error save message ", error);
-        }
+      let toUsers = message.To_Users__c.split(",");
+      console.log("toUsers ", toUsers);
+      if (
+        message.CreatedById !== this.userId &&
+        toUsers.includes(this.userId)
+      ) {
+        console.log("entrou");
+        this.template.querySelector("c-chat-list-users").getChats();
+        this.template
+          .querySelector("c-chat-conversation")
+          .insertNewMessage(message);
       }
       // Response contains the payload of the new message received
     };

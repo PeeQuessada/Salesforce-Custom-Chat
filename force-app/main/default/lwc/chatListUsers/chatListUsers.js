@@ -26,7 +26,6 @@ export default class ChatListUsers extends LightningElement {
   }
 
   selected(event) {
-    console.log("click");
     let chatId = event.currentTarget.dataset.chat;
     this.sendId(chatId);
     this.template.querySelector("c-chat-search-user").cleanValue();

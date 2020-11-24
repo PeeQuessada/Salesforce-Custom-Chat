@@ -146,7 +146,8 @@ public without sharing class chatController {
     try {
       Chat_Event__e event = new Chat_Event__e(
         Message__c = message,
-        ChatId__c = chatId
+        ChatId__c = chatId,
+        To_Users__c = getChatUsers(chatId)
       );
       Database.SaveResult result = EventBus.publish(event);
 
@@ -163,5 +164,19 @@ public without sharing class chatController {
         System.debug('sucesso ');
       }
     }
+  }
+
+  private static String getChatUsers(String chatId) {
+    String result = '';
+
+    for (ChatUser__c obj : [
+      SELECT User__c
+      FROM ChatUser__c
+      WHERE Chat__c = :chatId AND User__c != :UserInfo.getUserId()
+    ]) {
+      result += obj.User__c + ',';
+    }
+
+    return result;
   }
 }

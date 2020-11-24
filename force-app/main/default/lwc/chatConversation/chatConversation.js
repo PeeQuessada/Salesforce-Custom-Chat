@@ -19,7 +19,6 @@ export default class ChatConversation extends LightningElement {
 
   @api
   selectedChat(chatId, userId) {
-    console.log("chegou");
     this.chatId = chatId;
     this.userId = userId;
     this.getConversation();
@@ -52,12 +51,21 @@ export default class ChatConversation extends LightningElement {
     })
       .then((result) => {
         console.log("sucesso", result);
-        if (!this.chatId && this.userId) {
+        this.value = "";
+        this.template.querySelector("input").setAttribute("value", "");
+        let newChat = !this.chatId && this.userId;
+        this.chatId = result;
+        if (newChat) {
           let initialChat = new CustomEvent("reloaded");
           this.dispatchEvent(initialChat);
+        } else {
+          let message = {
+            Id: Math.random(),
+            Message__c: input.value,
+            Owner: true
+          };
+          this.messages.push(message);
         }
-        this.value = "";
-        this.chatId = result;
       })
       .catch((error) => {
         console.log("error insert ", error);
