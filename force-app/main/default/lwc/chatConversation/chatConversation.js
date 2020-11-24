@@ -1,11 +1,11 @@
-import { LightningElement, track, wire } from "lwc";
+import { LightningElement, track, wire, api } from "lwc";
 import getConversation from "@salesforce/apex/chatController.getConversation";
 import insertMessage from "@salesforce/apex/chatController.createMessage";
 import { subscribe, MessageContext } from "lightning/messageService";
 import SEND_USER from "@salesforce/messageChannel/sendUser__c";
 
 export default class ChatConversation extends LightningElement {
-  @track messages;
+  @track messages = [];
   @track chat;
   @track userChat;
 
@@ -20,6 +20,11 @@ export default class ChatConversation extends LightningElement {
     this.handleSubscribe();
   }
 
+  renderedCallback() {
+    let element = this.template.querySelector(".slds-scrollable_y");
+    element.scrollTop = element.scrollHeight - element.clientHeight;
+  }
+
   handleSubscribe() {
     if (this.subscription) {
       return;
@@ -27,7 +32,6 @@ export default class ChatConversation extends LightningElement {
     this.subscription = subscribe(this.messageContext, SEND_USER, (data) => {
       this.chatId = data.recordData.chatId;
       this.userId = data.recordData.userId;
-      console.log("event received ", data.recordData);
       this.getConversation();
     });
   }
@@ -89,5 +93,14 @@ export default class ChatConversation extends LightningElement {
     }
 
     return listAux;
+  }
+
+  @api
+  insertNewMessage(message) {
+    if (this.chatId === message.ChatId__c) {
+      console.log("if");
+      message.Id = Math.random();
+      this.messages.push(message);
+    }
   }
 }

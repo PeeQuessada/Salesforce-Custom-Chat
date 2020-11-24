@@ -1,4 +1,4 @@
-import { LightningElement, track, wire } from "lwc";
+import { LightningElement, track, wire, api } from "lwc";
 import getConversation from "@salesforce/apex/chatController.getChats";
 import { publish, MessageContext } from "lightning/messageService";
 import SEND_USER from "@salesforce/messageChannel/sendUser__c";
@@ -11,6 +11,7 @@ export default class ChatListUsers extends LightningElement {
     this.getChats();
   }
 
+  @api
   getChats() {
     getConversation()
       .then((result) => {
@@ -49,7 +50,6 @@ export default class ChatListUsers extends LightningElement {
   }
 
   formatListChat() {
-    console.log("chats", this.allConversations);
     let chats = [];
 
     this.allConversations.forEach((element) => {

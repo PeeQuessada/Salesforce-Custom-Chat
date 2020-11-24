@@ -30,12 +30,7 @@ public without sharing class chatController {
 
       result = new Map<String, Object>{
         'messages' => [
-          SELECT
-            Id,
-            Message__c,
-            CreatedById,
-            CreatedBy.Name,
-            FORMAT(CreatedDate)
+          SELECT Id, Message__c, CreatedById, CreatedBy.Name, CreatedDate
           FROM Message__c
           WHERE Chat__c = :chatId
           ORDER BY CreatedDate ASC
@@ -100,6 +95,7 @@ public without sharing class chatController {
 
       // Existiu uma conversa entre esse usuarios
       insert new Message__c(Chat__c = chatId, Message__c = message);
+      publishEvent(message, chatId);
       return chatId;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
@@ -143,5 +139,29 @@ public without sharing class chatController {
       return null;
     }
     return chatUser[0].Chat__c;
+  }
+
+  private static void publishEvent(String message, String chatId) {
+    Boolean fail = false;
+    try {
+      Chat_Event__e event = new Chat_Event__e(
+        Message__c = message,
+        ChatId__c = chatId
+      );
+      Database.SaveResult result = EventBus.publish(event);
+
+      if (!result.isSuccess()) {
+        fail = true;
+      }
+    } catch (Exception e) {
+      System.debug('error ' + e);
+      fail = true;
+    } finally {
+      if (fail) {
+        throw new AuraHandledException('Fail to send event');
+      } else {
+        System.debug('sucesso ');
+      }
+    }
   }
 }
