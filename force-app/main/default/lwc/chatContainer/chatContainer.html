@@ -2,10 +2,10 @@
   <div class="slds-card">
     <div class="slds-grid slds-gutters">
       <div class="slds-col slds-size_4-of-12">
-        <c-chat-list-users onselected={selectedUser}></c-chat-list-users>
+        <c-chat-list-users onselectuser={selectedUser}></c-chat-list-users>
       </div>
       <div class="slds-col slds-size_8-of-12 slds-m-vertical_xx-small">
-        <c-chat-conversation></c-chat-conversation>
+        <c-chat-conversation onreloaded={reloadedChat}></c-chat-conversation>
       </div>
     </div>
   </div>

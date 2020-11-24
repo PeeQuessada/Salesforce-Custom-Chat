@@ -1,8 +1,6 @@
-import { LightningElement, track, wire, api } from "lwc";
+import { LightningElement, track, api } from "lwc";
 import getConversation from "@salesforce/apex/chatController.getConversation";
 import insertMessage from "@salesforce/apex/chatController.createMessage";
-import { subscribe, MessageContext } from "lightning/messageService";
-import SEND_USER from "@salesforce/messageChannel/sendUser__c";
 
 export default class ChatConversation extends LightningElement {
   @track messages = [];
@@ -13,32 +11,24 @@ export default class ChatConversation extends LightningElement {
 
   @track chatId;
   @track userId;
-  subscription = null;
-  @wire(MessageContext) messageContext;
-
-  connectedCallback() {
-    this.handleSubscribe();
-  }
 
   renderedCallback() {
     let element = this.template.querySelector(".slds-scrollable_y");
     element.scrollTop = element.scrollHeight - element.clientHeight;
   }
 
-  handleSubscribe() {
-    if (this.subscription) {
-      return;
-    }
-    this.subscription = subscribe(this.messageContext, SEND_USER, (data) => {
-      this.chatId = data.recordData.chatId;
-      this.userId = data.recordData.userId;
-      this.getConversation();
-    });
+  @api
+  selectedChat(chatId, userId) {
+    console.log("chegou");
+    this.chatId = chatId;
+    this.userId = userId;
+    this.getConversation();
   }
 
   getConversation() {
     getConversation({ chatId: this.chatId })
       .then((result) => {
+        console.log(" this.chatId ", this.chatId);
         console.log("data ", result);
         this.chat = result.chat;
         this.messages = this.formatMessages(result.messages, result.userId);
@@ -62,9 +52,12 @@ export default class ChatConversation extends LightningElement {
     })
       .then((result) => {
         console.log("sucesso", result);
+        if (!this.chatId && this.userId) {
+          let initialChat = new CustomEvent("reloaded");
+          this.dispatchEvent(initialChat);
+        }
         this.value = "";
         this.chatId = result;
-        this.getConversation();
       })
       .catch((error) => {
         console.log("error insert ", error);
@@ -98,7 +91,6 @@ export default class ChatConversation extends LightningElement {
   @api
   insertNewMessage(message) {
     if (this.chatId === message.ChatId__c) {
-      console.log("if");
       message.Id = Math.random();
       this.messages.push(message);
     }

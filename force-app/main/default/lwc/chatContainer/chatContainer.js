@@ -38,4 +38,15 @@ export default class ChatContainer extends LightningElement {
       this.subscription = response;
     });
   }
+
+  selectedUser(event) {
+    const detail = event.detail;
+    this.template
+      .querySelector("c-chat-conversation")
+      .selectedChat(detail.chatId, detail.userId);
+  }
+
+  reloadedChat() {
+    this.template.querySelector("c-chat-list-users").getChats();
+  }
 }

@@ -1,9 +1,6 @@
-import { LightningElement, track, wire, api } from "lwc";
+import { LightningElement, track, api } from "lwc";
 import getConversation from "@salesforce/apex/chatController.getChats";
-import { publish, MessageContext } from "lightning/messageService";
-import SEND_USER from "@salesforce/messageChannel/sendUser__c";
 export default class ChatListUsers extends LightningElement {
-  @wire(MessageContext) messageContext;
   @track chats = [];
   @track allConversations = [];
 
@@ -84,12 +81,17 @@ export default class ChatListUsers extends LightningElement {
       }
     });
 
-    if (chat == null) {
+    if (
+      chat == null ||
+      !this.allConversations ||
+      this.allConversations.length === 0
+    ) {
       userId = chatId;
       chatId = null;
     }
 
-    const record = { recordData: { chatId: chatId, userId: userId } };
-    publish(this.messageContext, SEND_USER, record);
+    let value = { chatId: chatId, userId: userId };
+    let message = new CustomEvent("selectuser", { detail: value });
+    this.dispatchEvent(message);
   }
 }
