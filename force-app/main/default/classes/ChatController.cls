@@ -1,6 +1,7 @@
-public without sharing class chatController {
+public without sharing class ChatController {
+
+  // Search all user except the user section
   @AuraEnabled
-  //public static List<User> getUsers(String name) {
   public static Map<String, Object> getUsers(String name) {
     Map<String, Object> result;
     try {
@@ -9,12 +10,12 @@ public without sharing class chatController {
         SELECT Id, Name, FirstName, Alias
         FROM User
         WHERE Name LIKE :key AND Id != :UserInfo.getUserId()
+        WITH SECURITY_ENFORCED
       ];
 
       result = new Map<String, Object>{ 'users' => listUsers };
 
       return result;
-      //return listUsers;
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
@@ -54,26 +55,21 @@ public without sharing class chatController {
   @AuraEnabled
   public static List<Chat__c> getChats(String userName) {
     try {
-      String userId = UserInfo.getUserId();
-      String query;
+      String filterBy = 
+        (userName == null || String.isBlank(userName)) ? 
+        'User__c = ' + UserInfo.getUserId() : 
+        'User__r.Name LIKE \'%' + userName + '\'%';
 
-      if (userName != null && userName != '') {
-        query =
-          'SELECT Id, Name, ' +
-          '(SELECT Id, User__c, User__r.Name FROM Chats__r WHERE User__c != :userId) Chats, ' +
-          '(SELECT Id, Message__c FROM Messages__r ORDER BY CreatedDate LIMIT 1) Messages ' +
-          'FROM Chat__c WHERE Id IN ' +
-          '(SELECT Chat__c FROM ChatUser__c WHERE User__r.Name LIKE :userName)';
-      } else {
-        query =
-          'SELECT Id, Name, ' +
-          '(SELECT Id, User__c, User__r.Name FROM Chats__r WHERE User__c != :userId) Chats, ' +
-          '(SELECT Id, Message__c FROM Messages__r ORDER BY CreatedDate LIMIT 1) Messages ' +
-          'FROM Chat__c WHERE Id IN ' +
-          '(SELECT Chat__c FROM ChatUser__c WHERE User__c = :userId)';
-      }
+      String query = 
+        'SELECT Id, Name, ' +
+        '(SELECT Id, User__c, User__r.Name FROM Chats__r WHERE User__c != :userId) Chats, ' +
+        '(SELECT Id, Message__c FROM Messages__r ORDER BY CreatedDate LIMIT 1) Messages ' +
+        'FROM Chat__c WHERE Id IN ' +
+        '(SELECT Chat__c FROM ChatUser__c WHERE ' + filterBy +
+        ' WITH SECURITY_ENFORCED';
+
       System.debug('query ' + query);
-      return database.query(query);
+      return database.query(String.escapeSingleQuotes(query));
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());
     }
@@ -134,6 +130,7 @@ public without sharing class chatController {
       SELECT Id, Chat__c
       FROM ChatUser__c
       WHERE User__c = :userId AND Chat__c IN :setChatId
+      WITH SECURITY_ENFORCED
     ];
     if (chatUser.size() == 0) {
       return null;
