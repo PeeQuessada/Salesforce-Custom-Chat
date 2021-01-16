@@ -5,23 +5,10 @@
     </div>
     <div class="slds-m-top_small slds-scrollable_y c-list-users-height">
       <template for:each={chats} for:item="chat">
-        <div
-          class="slds-grid slds-gutters slds-m-top_x-small "
-          tabindex="0"
-          key={chat.Id}
-          data-chat={chat.Id}
-          data-record={chat}
-          onclick={selected}
-        >
+        <div class="slds-grid slds-gutters slds-m-top_x-small " tabindex="0" key={chat.Id} data-chat={chat.Id} data-record={chat} onclick={selected} >
           <div class="slds-col slds-size_2-of-6 c-avatar-houver">
-            <span
-              aria-hidden="true"
-              class="slds-avatar slds-avatar_circle slds-chat-avatar"
-            >
-              <abbr
-                class="slds-avatar__initials slds-avatar__initials_inverse"
-                title={chat.Name}
-              >
+            <span aria-hidden="true" class="slds-avatar slds-avatar_circle slds-chat-avatar" >
+              <abbr class="slds-avatar__initials slds-avatar__initials_inverse" title={chat.Name} >
                 {chat.Alias}
               </abbr>
             </span>
